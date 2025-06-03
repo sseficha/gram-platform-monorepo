@@ -1,0 +1,12 @@
+services:
+  orchestrator-api:
+    build:
+      context: .
+      dockerfile: applications/orchestrator/Dockerfile.api
+    image: orchestrator_api_image
+    ports:
+      - "8001:80"
+    volumes:
+        - ./applications/orchestrator/orchestrator/:/orchestrator/orchestrator/
+        - ./applications/orchestrator/tests/:/orchestrator/tests/
+        - ./applications/packages/contracts:/packages/contracts

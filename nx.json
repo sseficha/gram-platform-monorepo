@@ -1,4 +1,79 @@
 {
   "extends": "nx/presets/npm.json",
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "targetDefaults": {
+      "lock": {
+        "executor": "@nxlv/python:lock",
+        "options": {
+          "update": false
+        }
+      },
+      "sync": {
+        "executor": "@nxlv/python:sync",
+        "options": {}
+      },
+      "add": {
+        "executor": "@nxlv/python:add",
+        "options": {}
+      },
+      "update": {
+        "executor": "@nxlv/python:update",
+        "options": {}
+      },
+      "remove": {
+        "executor": "@nxlv/python:remove",
+        "options": {}
+      },
+      "install": {
+        "executor": "@nxlv/python:install",
+        "options": {
+          "silent": false,
+          "args": "",
+          "cacheDir": ".cache/pypoetry",
+          "verbose": false,
+          "debug": false
+        }
+      },
+
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run ruff check --fix --config ../../pyproject.toml",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run ruff check --config ../../pyproject.toml",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run ruff format --config ../../pyproject.toml",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "poetry run ruff format --check --config ../../pyproject.toml",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{workspaceRoot}/reports/{projectRoot}/unittests",
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "command": "poetry run pytest tests/ --log-level=INFO",
+        "cwd": "{projectRoot}"
+      },
+      "cache": true
+    }
+  }
 }

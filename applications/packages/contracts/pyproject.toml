@@ -1,0 +1,41 @@
+[project]
+name = "contracts"
+version = "0.1.0"
+description = "Package to define and manage contracts in the GRAM platform"
+authors = []
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+
+  [tool.poetry]
+  package-mode = false
+
+
+  [tool.poetry.dependencies]
+  python = ">=3.12,<3.13"
+
+  [tool.poetry.group.dev.dependencies]
+  autopep8 = "2.3.1"
+  pytest-sugar = "^1.0.0"
+  pytest-cov = "^6.0.0"
+  pytest-html = "^4.1.1"
+  ruff = "^0.9.10"
+  mypy = "^1.16.0"
+  pytest = "^8.3.5"
+
+
+
+#Test configuration
+[tool.coverage.run]
+branch = true
+source = [ "contracts" ]
+
+[tool.coverage.report]
+exclude_lines = ['if TYPE_CHECKING:']
+show_missing = true
+
+[tool.pytest.ini_options]
+addopts = """
+ --cov
+ --cov-report html:'../../../coverage/applications/packages/contracts/html'
+ --html='../../../reports/applications/packages/contracts/unittests/html/index.html'
+"""

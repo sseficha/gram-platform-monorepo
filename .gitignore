@@ -42,3 +42,13 @@ Thumbs.db
 .nx/workspace-data
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# nx cache
+.cache
+# coverage file
+.coverage
+# test reports
+reports
+# package in editable mode metadata
+*.egg-info
+
