@@ -1,108 +1,88 @@
 # GramPlatformMonorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+## Requirements
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+### Install NX
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/npm-workspaces-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+The advantage of a global installation is that you don't have to prefix your commands with npx, yarn or pnpm. The global Nx installation hands off the process execution to the local Nx installation in your repository.
+```js
+npm add --global nx@latest
+```
 
-## Run tasks
-
-To run tasks with Nx use:
-
+### Install Poetry
+You need a global poetry command available. Example installation with pipx:
 ```sh
-npx nx <target> <project-name>
+pipx install poetry
 ```
 
-For example:
+## Commands
+Core command for the development workflow:
 
-```sh
-npx nx build myproject
+```js
+nx run project:add tenacity # installs tenacity dep
+nx run project:remove tenacity # removes tenacity dep
+nx run project:install # installs deps and creates a local venv if not exists (typically you want to run lock command first)
+nx run project:lock # recreates the lock file
+nx run project:sync # syncs the venv to the definition of the lock file
+nx run project:test # runs pytest and generates reports and coverage files
+nx run project:lint-check # runs the ruff linter, only check, no apply
+nx run project:lint # runs the ruff linter, fixing errors.
+nx run project:format-check # run the ruff formatter, only check, no apply
+nx run project:format # run the ruff formatter, fixing errors.
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+All command accept extra trailing parameters.
+For a detailed view of the commands, inspect the root's `project.json` and project specific `nx.json` files.
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-## Versioning and releasing
-
-To version and release the library use
-
-```
-npx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](hhttps://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
-```
-
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
-
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
-
-# Generate a library
-npx nx g @nx/react:lib some-lib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
+## (Optionally) Install Nx Console
 
 Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
 
 [Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-## Useful links
+## Developer Notes
 
-Learn more:
+### Virtual Envs and Interpreters
+Since every poetry install will generate a separate venv local to that service
+it is advised to set your IDE's interpreter to the venv of the project you are currently
+working on. This will allow it to recognize third party and local dependencies, give you 
+autocompletion and syntax highlighting as well as the option to run your tests through nx.
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/npm-workspaces-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Marking source roots
+When developing it is advised to mark all relevant folders that will behave as source roots.
+In other words mark any top level service or package relevant to you as root so that
+your IDE can recognize the imports and are in line with the entrypoints for code execution in
+tests and Docker containers.
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Linting/Formatting
+We use [pre-commit](https://pre-commit.com/) to execute git hook scripts at every commit.
+After installing it in your local pc, install the git hook scripts using:
+
+```bash
+pre-commit install
+```
+
+You can also execute the scripts manually using:
+
+```bash
+pre-commit run --all-files
+```
+
+It is strongly advised to set up a file watcher depending on your IDE to run the pre-commit hooks for example
+when saving a file. That way you can have live linting/formatting and you are sure to use the same
+versions as the ones of the pre-commit file.
+
+## Docker Compose
+To spin up all services navigate to the root of the project and run
+```sh
+docker compose up
+```
+
+## Running alembic migrations
+All sqlalchemy models should give the capability to be autogenerated. To run an alembic migration run
+```shell
+ alembic revision --autogenerate -m "Revision message"
+```
+and ALWAYS make sure that the generated migration adheres to what you want to do after inspecting/editing the generated file.
+

@@ -1,7 +1,7 @@
 [project]
-name = "orchestrator"
+name = "match"
 version = "0.1.0"
-description = "Orchestrator service of GRAM platform"
+description = "Match service of GRAM platform"
 authors = []
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -12,13 +12,9 @@ requires-python = ">=3.12,<3.13"
 
   [tool.poetry.dependencies]
   python = ">=3.12,<3.13"
-  fastapi = {extras = ["standard"], version = "^0.115.12"}
   pydantic = "^2.11.5"
   celery = {extras = ["redis"], version = "^5.5.0"}
   pydantic_settings = "^2.9.1"
-  alembic = "^1.16.1"
-  alembic-postgresql-enum = "^1.7.0"
-  psycopg2 = "^2.9.10"
 
 
   [tool.poetry.group.dev.dependencies]
@@ -37,7 +33,7 @@ contracts = { path = "../packages/contracts", develop = true }
 #Test configuration
 [tool.coverage.run]
 branch = true
-source = [ "orchestrator" ]
+source = [ "match" ]
 
 [tool.coverage.report]
 exclude_lines = ['if TYPE_CHECKING:']
@@ -46,6 +42,6 @@ show_missing = true
 [tool.pytest.ini_options]
 addopts = """
  --cov
- --cov-report html:'../../coverage/applications/orchestrator/html'
- --html='../../reports/applications/orchestrator/unittests/html/index.html'
+ --cov-report html:'../../coverage/applications/match/html'
+ --html='../../reports/applications/match/unittests/html/index.html'
 """

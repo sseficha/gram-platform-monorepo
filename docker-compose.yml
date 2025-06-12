@@ -1,8 +1,9 @@
 services:
   orchestrator-api:
+    container_name: orchestrator_api
     build:
       context: .
-      dockerfile: applications/orchestrator/Dockerfile.api
+      dockerfile: applications/orchestrator/Dockerfile
     image: orchestrator_api_image
     ports:
       - "8001:80"
@@ -10,3 +11,142 @@ services:
         - ./applications/orchestrator/orchestrator/:/orchestrator/orchestrator/
         - ./applications/orchestrator/tests/:/orchestrator/tests/
         - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=local
+
+
+  orchestrator-workers:
+    container_name: orchestrator_workers
+    build:
+      context: .
+      dockerfile: applications/orchestrator/Dockerfile
+    image: orchestrator_workers_image
+    command: "watchmedo auto-restart --patterns=*.py --directory=. --recursive -- celery -A orchestrator.workers.main worker --loglevel=info"
+    volumes:
+        - ./applications/orchestrator/orchestrator/:/orchestrator/orchestrator/
+        - ./applications/orchestrator/tests/:/orchestrator/tests/
+        - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - orchestrator-api
+    environment:
+      - ENVIRONMENT=local
+
+  standardization-workers:
+    container_name: standardization_workers
+    build:
+      context: .
+      dockerfile: applications/standardization/Dockerfile
+    volumes:
+      - ./applications/standardization/standardization/:/standardization/standardization/
+      - ./applications/standardization/tests/:/standardization/tests/
+      - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=local
+
+  search-workers:
+    container_name: search_workers
+    build:
+      context: .
+      dockerfile: applications/search/Dockerfile
+    volumes:
+      - ./applications/search/search/:/search/search/
+      - ./applications/search/tests/:/search/tests/
+      - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=local
+
+  match-workers:
+    container_name: match_workers
+    build:
+      context: .
+      dockerfile: applications/match/Dockerfile
+    volumes:
+      - ./applications/match/match/:/match/match/
+      - ./applications/match/tests/:/match/tests/
+      - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=local
+
+  directory-workers:
+    container_name: directory_workers
+    build:
+      context: .
+      dockerfile: applications/directory/Dockerfile
+    volumes:
+      - ./applications/directory/directory/:/directory/directory/
+      - ./applications/directory/tests/:/directory/tests/
+      - ./applications/packages/contracts:/packages/contracts
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - ENVIRONMENT=local
+
+
+  postgres:
+    container_name: postgres
+    image: postgres:17
+    command: postgres -c 'max_connections=200'
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=postgres
+      - POSTGRES_DATABASES=orchestrator
+      - LOG_LEVEL=error
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh
+      - ./postgres-healthcheck.sh:/usr/local/bin/postgres-healthcheck.sh
+    healthcheck:
+      test: ["CMD", "/bin/bash", "/usr/local/bin/postgres-healthcheck.sh"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:4-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: always
+    command: [ "redis-server", "--appendonly", "yes" ]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis/data
+
+
+volumes:
+  postgres_data:
+  redis_data:
+

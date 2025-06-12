@@ -1,9 +1,9 @@
 FROM python:3.12
 
 RUN pip install poetry==2.*
+RUN poetry config virtualenvs.create false
 
 WORKDIR /orchestrator
-#ENV PYTHONPATH=/code
 
 COPY ./applications/orchestrator/pyproject.toml /orchestrator/pyproject.toml
 COPY ./applications/orchestrator/poetry.lock /orchestrator/poetry.lock
@@ -13,4 +13,6 @@ RUN poetry install
 
 COPY ./applications/orchestrator/ /orchestrator/
 
-CMD ["poetry", "run", "python", "-m", "fastapi", "run", "orchestrator/main.py", "--port", "80", "--reload"]
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["python", "-m", "fastapi", "run", "orchestrator/api/main.py", "--port", "80", "--reload"]
