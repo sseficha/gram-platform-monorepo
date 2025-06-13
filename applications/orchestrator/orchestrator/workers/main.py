@@ -1,16 +1,18 @@
 from celery import Celery
 from kombu import Exchange, Queue
 
-from orchestrator.core.settings import settings
+from orchestrator.core.settings import get_settings
+
+settings = get_settings()
 
 app = Celery(
     "orchestrator_worker",
     include=[
-        "orchestrator.workers.tasks.create_process_saga.create_process",
-        "orchestrator.workers.tasks.create_process_saga.handle_standardization_reply",
+        "orchestrator.workers.tasks.create_process_saga.handle_standardize_reply",
         "orchestrator.workers.tasks.create_process_saga.handle_search_reply",
         "orchestrator.workers.tasks.create_process_saga.handle_match_reply",
-        "orchestrator.workers.tasks.create_process_saga.save",
+        "orchestrator.workers.tasks.create_process_saga.complete_process",
+        "orchestrator.workers.tasks.create_process_saga.create_partial_process",
     ],
 )
 

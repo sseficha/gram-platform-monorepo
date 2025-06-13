@@ -5,7 +5,7 @@ from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
-class Base(DeclarativeBase):
+class BaseModel(DeclarativeBase):
     created_at: Mapped[Optional[datetime]] = mapped_column(default=datetime.now(timezone.utc))
     updated_at: Mapped[Optional[datetime]] = mapped_column(default=datetime.now(timezone.utc))
     metadata = MetaData(

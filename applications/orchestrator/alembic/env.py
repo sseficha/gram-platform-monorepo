@@ -6,8 +6,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from orchestrator.core.settings import settings
+from orchestrator.core.settings import get_settings
 
+settings = get_settings()
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -21,11 +22,11 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from orchestrator.models.batch import Batch  # noqa
-from orchestrator.models.process import Process  # noqa
-from orchestrator.models.base import Base  # noqa
+from orchestrator.models.batch import BatchModel  # noqa
+from orchestrator.models.process import ProcessModel  # noqa
+from orchestrator.models.base import BaseModel  # noqa
 
-target_metadata = Base.metadata
+target_metadata = BaseModel.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

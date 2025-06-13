@@ -5,19 +5,19 @@ from uuid import UUID
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from orchestrator.models.base import Base
+from orchestrator.models.base import BaseModel
 
 
-class Batch(Base):
+class BatchModel(BaseModel):
     __tablename__ = "batches"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    document_id: Mapped[UUID]
-    uploaded_by: Mapped[UUID]
+    document_id: Mapped[Optional[UUID]]
+    uploaded_by: Mapped[Optional[UUID]]
     is_cancelled: Mapped[bool] = mapped_column(default=False)
     error: Mapped[Optional[dict]] = mapped_column(JSONB)  # TODO not errors right?
 
-    processes: Mapped[list["Process"]] = relationship()  # noqa: F821
+    processes: Mapped[list["ProcessModel"]] = relationship()  # noqa: F821
 
     def __repr__(self):
         return (

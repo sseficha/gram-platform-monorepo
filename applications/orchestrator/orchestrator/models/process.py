@@ -7,23 +7,23 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from orchestrator.enums.process_status import ProcessStatus
-from orchestrator.models.base import Base
+from orchestrator.models.base import BaseModel
 
 
-class Process(Base):
+class ProcessModel(BaseModel):
     __tablename__ = "processes"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-    batch_id: Mapped[UUID] = mapped_column(ForeignKey("batches.id"))
-    status: Mapped[ProcessStatus] = mapped_column(default=ProcessStatus.CREATED)
-    input_source: Mapped[[dict]] = mapped_column(JSONB)
-    input_normalized: Mapped[Optional[list[dict]]] = mapped_column(JSONB)
+    batch_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey("batches.id"))
+    status: Mapped[ProcessStatus] = mapped_column(default=ProcessStatus.STANDARDIZING)
+    input_source: Mapped[dict] = mapped_column(JSONB)
+    input_normalized: Mapped[Optional[dict]] = mapped_column(JSONB)
     candidates_result: Mapped[Optional[list[dict]]] = mapped_column(JSONB)
     candidates_output: Mapped[Optional[list[dict]]] = mapped_column(JSONB)
     entity_match: Mapped[Optional[dict]] = mapped_column(JSONB)
     errors: Mapped[Optional[list[dict]]] = mapped_column(JSONB)
 
-    batch: Mapped["Batch"] = relationship(back_populates="processes")  # noqa: F821
+    batch: Mapped["BatchModel"] = relationship(back_populates="processes")  # noqa: F821
 
     def __repr__(self):
         return (

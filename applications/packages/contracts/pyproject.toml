@@ -12,6 +12,8 @@ requires-python = ">=3.12,<3.13"
 
   [tool.poetry.dependencies]
   python = ">=3.12,<3.13"
+  pydantic = "^2.11.5"
+
 
   [tool.poetry.group.dev.dependencies]
   autopep8 = "2.3.1"

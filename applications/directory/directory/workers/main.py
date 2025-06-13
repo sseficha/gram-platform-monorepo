@@ -3,7 +3,10 @@ from kombu import Exchange, Queue
 
 from directory.core.settings import settings
 
-app = Celery("directory_worker", include="directory.workers.tasks.tasks")
+app = Celery(
+    "directory_worker",
+    include=["directory.workers.tasks.serialize", "directory.workers.tasks.deserialize"],
+)
 
 app.conf.update(
     broker_url=settings.CELERY_BROKER_URL,
